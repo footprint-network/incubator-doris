@@ -27,6 +27,6 @@
 
  {{ doris__partition_values(relation) }}
 
-  insert into {{ relation.include(database=False) }}
+  ;insert into {{ relation.include(database=False) }} WITH LABEL insert_{{random_int(15)}}
   {{ sql }}
 {%- endmacro %}

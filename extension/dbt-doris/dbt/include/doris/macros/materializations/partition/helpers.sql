@@ -15,6 +15,12 @@
 -- specific language governing permissions and limitations
 -- under the License.
 
+{%- macro random_int(len) -%}
+  {%- for _ in range(len) -%}
+    {{ range(10) | random }}
+  {%- endfor -%}
+{%- endmacro -%}
+
 {% macro get_distinct_partitions(relation, partition_by) %}
     {% set sql %}
     select distinct {{ ','.join(partition_by) }} from {{ relation }} order by {{ ','.join(partition_by) }}
