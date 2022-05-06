@@ -5,5 +5,11 @@
   create table {{ relation.include(database=False) }}
     {{ doris__partition_by() }}
     {{ doris__distributed_by() }}
-    {{ doris__properties() }} as {{ sql }}
+    {{ doris__aggregate_key() }}
+    {{ doris__properties() }} as {{ sql }};
+
+ {{ doris__partition_values(relation) }}
+
+  insert into {{ relation.include(database=False) }}
+  {{ sql }}
 {%- endmacro %}

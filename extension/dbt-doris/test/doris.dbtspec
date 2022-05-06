@@ -1,8 +1,9 @@
 target:
   type: doris
-  host: 127.0.0.1
-  port: 9030
-  username: root
+  host: "{{env_var('DBT_DORIS_HOST_NAME', 'dbt_host')}}"
+  port: "{{env_var('DBT_DORIS_PORT', '9031')}}"
+  username: "{{env_var('DBT_DORIS_USERNAME', 'dbt_username')}}"
+  password: "{{env_var('DBT_DORIS_PASSWORD', 'dbt_password')}}"
   schema: "dbt_{{ var('_dbt_random_suffix') }}"
 
 sequences:

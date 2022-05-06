@@ -10,18 +10,41 @@
 
 {% macro doris__partition_by() -%}
   {% set cols = config.get('partition_by') %}
+  {% set partition_type = config.get('partition_type', 'RANGE') %}
   {% if cols is not none %}
-    PARTITION BY RANGE (
+    PARTITION BY {{ partition_type }} (
       {% for col in cols %}
         {{ col }}{% if not loop.last %},{% endif %}
       {% endfor %}
-    )(
-        {% set init = config.get('partition_by_init',validator=validation.any[list]) %}
-        {% if init is not none %}
-          {% for row in init %}
-            {{ row }}{% if not loop.last %},{% endif %}
-          {% endfor %}
-        {% endif %}
+    )()
+  {% endif %}
+{%- endmacro %}
+
+{% macro doris__partition_by_str() -%}
+  {% set partition_by = config.get('partition_by_str') %}
+  {% if partition_by is not none %}
+    {{ partition_by }}
+  {% endif %}
+{%- endmacro %}
+
+{% macro doris__partition_values(relation) -%}
+  {% set partition_values = config.get('partition_values') %}
+  {% if partition_values is not none %}
+    {% for item in partition_values %}
+        alter table {{ relation.include(database=False) }}
+        ADD PARTITION `{{ item[0] }}` VALUES {{ item[1] }};
+    {% endfor %}
+  {% endif %}
+{%- endmacro %}
+
+{% macro doris__aggregate_key() -%}
+  {% set cols = config.get('aggregate_key', validator=validation.any[list]) %}
+  {% if cols is not none %}
+    AGGREGATE KEY (
+      {% for item in cols %}
+        {{ item }}
+      {% if not loop.last %},{% endif %}
+      {% endfor %}
     )
   {% endif %}
 {%- endmacro %}
