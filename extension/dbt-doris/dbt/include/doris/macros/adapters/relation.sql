@@ -50,6 +50,18 @@
   {% endif %}
 {%- endmacro %}
 
+{% macro doris__unique_key() -%}
+  {% set cols = config.get('unique_key', validator=validation.any[list]) %}
+  {% if cols is not none %}
+    UNIQUE KEY (
+      {% for item in cols %}
+        {{ item }}
+      {% if not loop.last %},{% endif %}
+      {% endfor %}
+    )
+  {% endif %}
+{%- endmacro %}
+
 {% macro doris__aggregate_key() -%}
   {% set cols = config.get('aggregate_key', validator=validation.any[list]) %}
   {% if cols is not none %}

@@ -23,6 +23,7 @@
     {{ doris__partition_by() }}
     {{ doris__distributed_by() }}
     {{ doris__aggregate_key() }}
+    {{ doris__unique_key() }}
     {{ doris__properties() }} as {{ sql }};
 
  {{ doris__partition_values(relation) }}
